@@ -25,4 +25,4 @@ open-grafana:
 	open http://localhost:3000/datasources
 
 k6:
-	docker run --net=mesh_network -i loadimpact/k6 run --vus 2 --duration 5s --rps 2 - < ./loadtest/example.js
+	docker run --net=mesh_network -i loadimpact/k6 run --vus 5 --duration 60s --rps 5 - < ./loadtest/example.js

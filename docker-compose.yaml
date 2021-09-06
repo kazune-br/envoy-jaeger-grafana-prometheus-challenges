@@ -52,8 +52,20 @@ services:
     container_name: grafana
     ports:
       - "3000:3000"
+    depends_on:
+      - influxdb
+    volumes:
+      - ./data/grafana-storage:/var/lib/grafana
     networks:
       mesh_network:
+
+  influxdb:
+    image: influxdb
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./data/influxdb-storage:/var/lib/influxdb
 
   node-exporter:
     image: quay.io/prometheus/node-exporter
