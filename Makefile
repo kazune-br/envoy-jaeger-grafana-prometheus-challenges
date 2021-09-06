@@ -24,5 +24,12 @@ open-prometheus:
 open-grafana:
 	open http://localhost:3000/datasources
 
+reset-data:
+	rm -rf data/*
+
 k6:
-	docker run --net=mesh_network -i loadimpact/k6 run --vus 5 --duration 60s --rps 5 - < ./loadtest/example.js
+	# docker-compose run --rm k6 run /scripts/example.js
+	docker run \
+		--net=mesh_network \
+		-e K6_OUT=influxdb=http://influxdb:8086/k6 \
+		-i loadimpact/k6 run --vus 5 --duration 60s --rps 5 - < ./loadtest/example.js

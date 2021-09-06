@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 services:
   front-envoy:
     image: "front-envoy:latest"
@@ -37,6 +37,18 @@ services:
     networks:
       mesh_network:
 
+  node-exporter:
+    image: quay.io/prometheus/node-exporter
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc
+      - /sys:/host/sys
+      - /:/rootfs
+    networks:
+      mesh_network:
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -52,6 +64,10 @@ services:
     container_name: grafana
     ports:
       - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
     depends_on:
       - influxdb
     volumes:
@@ -60,24 +76,29 @@ services:
       mesh_network:
 
   influxdb:
-    image: influxdb
+    image: influxdb:1.8
+    container_name: influxdb
     restart: always
     ports:
       - "8086:8086"
+    environment:
+      - INFLUXDB_DB=k6
     volumes:
       - ./data/influxdb-storage:/var/lib/influxdb
-
-  node-exporter:
-    image: quay.io/prometheus/node-exporter
-    container_name: node-exporter
-    ports:
-      - "9100:9100"
-    volumes:
-      - /proc:/host/proc
-      - /sys:/host/sys
-      - /:/rootfs
     networks:
       mesh_network:
+
+#  k6:
+#    image: loadimpact/k6:latest
+#    container_name: k6
+#    ports:
+#      - "6565:6565"
+#    environment:
+#      - K6_OUT=influxdb=http://influxdb:8086/k6
+#    volumes:
+#      - ./loadtest:/scripts
+#    networks:
+#      mesh_network:
 
 networks:
   mesh_network:
