@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: "./docker/front/Dockerfile"
-    command: /usr/local/bin/envoy --service-cluster front_envoy -c /etc/envoy/envoy.yaml
     container_name: front-envoy
+    command: /usr/local/bin/envoy --service-cluster front_envoy -c /etc/envoy/envoy.yaml
     ports:
       - "8088:8088"
       - "9088:9088"
@@ -18,8 +18,8 @@ services:
     build:
       context: .
       dockerfile: "./docker/back/Dockerfile"
-    command: /usr/local/bin/envoy --service-cluster back_envoy -c /etc/envoy/envoy.yaml
     container_name: back-envoy
+    command: /usr/local/bin/envoy --service-cluster back_envoy -c /etc/envoy/envoy.yaml
     ports:
       - "8089:8089"
       - "9089:9089"
@@ -39,15 +39,17 @@ services:
 
   prometheus:
     image: prom/prometheus
+    container_name: prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - '9090:9090'
+      - "9090:9090"
     networks:
       mesh_network:
 
   grafana:
     image: grafana/grafana
+    container_name: grafana
     ports:
       - "3000:3000"
     networks:
