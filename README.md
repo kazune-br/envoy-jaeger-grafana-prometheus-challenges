@@ -1,4 +1,4 @@
-# envoy-jaeger-grafana-prometheus-challenges
+# Envoy Jaeger Grafana Prometheus Challenges
 
 ## How to run
 ```bash
