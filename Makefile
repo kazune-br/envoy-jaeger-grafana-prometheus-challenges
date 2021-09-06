@@ -23,3 +23,6 @@ open-prometheus:
 
 open-grafana:
 	open http://localhost:3000/datasources
+
+k6:
+	docker run --net=mesh_network -i loadimpact/k6 run --vus 2 --duration 5s --rps 2 - < ./loadtest/example.js
