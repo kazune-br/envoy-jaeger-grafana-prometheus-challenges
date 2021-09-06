@@ -1,0 +1,31 @@
+global:
+  scrape_interval:     15s
+  external_labels:
+    monitor: 'custom-monitor'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node-exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  - job_name: 'front-envoy'
+    scrape_interval: 5s
+    metrics_path: /stats/prometheus
+    static_configs:
+      - targets: ['front-envoy:9088']
+        labels:
+          group: 'envoy'
+
+  - job_name: 'back-envoy'
+    scrape_interval: 5s
+    metrics_path: /stats/prometheus
+    static_configs:
+      - targets: ['back-envoy:9089']
+        labels:
+          group: 'envoy'

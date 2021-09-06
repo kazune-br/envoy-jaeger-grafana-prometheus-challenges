@@ -1,0 +1,54 @@
+version: '3.3'
+services:
+  front-envoy:
+    image: "front-envoy:latest"
+    build:
+      context: .
+      dockerfile: "./docker/front/Dockerfile"
+    command: /usr/local/bin/envoy --service-cluster front_envoy -c /etc/envoy/envoy.yaml
+    container_name: front-envoy
+    ports:
+      - "8088:8088"
+      - "9088:9088"
+
+  back-envoy:
+    image: "back-envoy:latest"
+    build:
+      context: .
+      dockerfile: "./docker/back/Dockerfile"
+    command: /usr/local/bin/envoy --service-cluster back_envoy -c /etc/envoy/envoy.yaml
+    container_name: back-envoy
+    ports:
+      - "8089:8089"
+      - "9089:9089"
+
+  jaeger:
+    image: jaegertracing/all-in-one
+    container_name: jaeger
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: 9411
+    ports:
+      - "9411:9411"
+      - "16686:16686"
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - '9090:9090'
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+
+  node-exporter:
+    image: quay.io/prometheus/node-exporter
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc
+      - /sys:/host/sys
+      - /:/rootfs
