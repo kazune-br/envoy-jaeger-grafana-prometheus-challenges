@@ -134,6 +134,8 @@ services:
     volumes:
       - ./data/redis:/data
     restart: always
+    networks:
+      - mesh_network
 
 #  k6:
 #    image: loadimpact/k6:latest
