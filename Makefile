@@ -34,8 +34,8 @@ reset-data:
 	rm -rf data/*
 
 k6:
-	# docker-compose run --rm k6 run /scripts/example.js
-	docker run \
-		--net=mesh_network \
-		-e K6_OUT=influxdb=http://influxdb:8086/k6 \
-		-i loadimpact/k6 run --vus 5 --duration 60s --rps 5 - < ./loadtest/example.js
+	docker compose exec -T k6 \
+		k6 run \
+			--vus 5 \
+			--duration 60s \
+			--rps 5 - < ./loadtest/example.js
