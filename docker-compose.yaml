@@ -97,7 +97,7 @@ services:
     volumes:
       - ./data/influxdb-storage:/var/lib/influxdb
     networks:
-      mesh_network:
+      - mesh_network
 
   loki:
     image: grafana/loki
