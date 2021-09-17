@@ -1,4 +1,9 @@
 version: "3.9"
+
+networks:
+  mesh_network:
+    name: mesh_network
+
 services:
   front-envoy:
     image: "front-envoy:latest"
@@ -11,7 +16,7 @@ services:
       - "8088:8088"
       - "9088:9088"
     networks:
-      mesh_network:
+      - mesh_network
 
   back-envoy:
     image: "back-envoy:latest"
@@ -24,7 +29,7 @@ services:
       - "8089:8089"
       - "9089:9089"
     networks:
-      mesh_network:
+      - mesh_network
 
   jaeger:
     image: jaegertracing/all-in-one
@@ -35,7 +40,7 @@ services:
       - "9411:9411"
       - "16686:16686"
     networks:
-      mesh_network:
+      - mesh_network
 
   node-exporter:
     image: quay.io/prometheus/node-exporter
@@ -47,7 +52,7 @@ services:
       - /sys:/host/sys
       - /:/rootfs
     networks:
-      mesh_network:
+      - mesh_network
 
   prometheus:
     image: prom/prometheus
@@ -57,7 +62,7 @@ services:
     ports:
       - "9090:9090"
     networks:
-      mesh_network:
+      - mesh_network
 
   grafana:
     image: grafana/grafana
@@ -73,7 +78,7 @@ services:
     volumes:
       - ./data/grafana-storage:/var/lib/grafana
     networks:
-      mesh_network:
+      - mesh_network
 
   influxdb:
     image: influxdb:1.8
@@ -99,7 +104,3 @@ services:
 #      - ./loadtest:/scripts
 #    networks:
 #      mesh_network:
-
-networks:
-  mesh_network:
-    name: mesh_network
