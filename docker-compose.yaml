@@ -92,6 +92,16 @@ services:
       - ./data/influxdb-storage:/var/lib/influxdb
     networks:
       mesh_network:
+  redis:
+    build:
+      context: .
+      dockerfile: ./docker/redis/Dockerfile
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    restart: always
 
 #  k6:
 #    image: loadimpact/k6:latest
