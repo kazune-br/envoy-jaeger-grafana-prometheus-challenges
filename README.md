@@ -50,6 +50,7 @@ It is possible to see the load test result in grafana dashboard.
 In order to see the result, two steps are required.  
 1. In configuration page, add influxdb as new data source.
 2. In import page, put `2587` on the form and import `k6 Load Testing Results` dashboard via grafana.com.
+3. `10660` and `14801` are also useful, so if you like it, import as mentioned above. 
 
 ## How to set up loki on local
 ```
