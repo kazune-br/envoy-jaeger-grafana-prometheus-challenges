@@ -15,6 +15,11 @@ services:
     ports:
       - "8088:8088"
       - "9088:9088"
+# In my environmental, it does not work correctly.
+#    logging:
+#      driver: loki
+#      options:
+#        loki-url: http://loki:3100/loki/api/v1/push
     networks:
       - mesh_network
 
@@ -93,6 +98,23 @@ services:
       - ./data/influxdb-storage:/var/lib/influxdb
     networks:
       mesh_network:
+
+  loki:
+    image: grafana/loki
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - mesh_network
+  promtail:
+    image: grafana/promtail:2.2.1
+    container_name: promtail
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    networks:
+      - mesh_network
   redis:
     build:
       context: .
