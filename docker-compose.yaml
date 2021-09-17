@@ -107,6 +107,14 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - mesh_network
+
+  sandbox:
+    image: almalinux:latest
+    container_name: sandbox
+    command: tail -f /dev/null
+    networks:
+      - mesh_network
+
   promtail:
     image: grafana/promtail:2.2.1
     container_name: promtail
@@ -115,6 +123,7 @@ services:
     command: -config.file=/etc/promtail/promtail-config.yaml
     networks:
       - mesh_network
+
   redis:
     build:
       context: .
