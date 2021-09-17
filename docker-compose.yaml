@@ -48,9 +48,9 @@ services:
     ports:
       - "9100:9100"
     volumes:
-      - /proc:/host/proc
-      - /sys:/host/sys
-      - /:/rootfs
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
     networks:
       - mesh_network
 
