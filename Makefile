@@ -15,6 +15,12 @@ logs:
 healthcheck:
 	curl localhost:8088/healthcheck/backend
 
+check-influxdb:
+	curl localhost:8086/health
+
+check-loki:
+	curl localhost:3100/ready
+
 open-jaeger:
 	open http://localhost:16686/
 
