@@ -37,23 +37,24 @@ make check-influxdb
 ```
 
 ### loki
-```
+```bash
 make check-loki
 ```
 
 ## How to make load test by k6
-```
+```bash
 make k6
 ```
 
-It is possible to see the load test result in grafana dashboard.  
-In order to see the result, two steps are required.  
-1. In configuration page, add influxdb as new data source.
-2. In import page, put `2587` on the form and import `k6 Load Testing Results` dashboard via grafana.com.
-3. `10660` and `14801` are also useful, so if you like it, import as mentioned above. 
+Import `2587`, `10660`, and `14801` in grafana dashboard to see load test result.
 
-## How to set up loki on local
-```
+## How to set up loki and query logs
+```bash
 docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+# if latest version does not work well, try arm-v7.
+# docker plugin install grafana/loki-docker-driver:arm-v7 --alias loki --grant-all-permissions
 docker plugin ls
 ```
+
+Register Prometheus as data sources in grafana dashboard first.  
+Then, import `1860` and `13978` to visualize metrics collected through node exporter. 
