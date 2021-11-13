@@ -15,11 +15,10 @@ services:
     ports:
       - "8088:8088"
       - "9088:9088"
-# In my environmental, it does not work correctly.
-#    logging:
-#      driver: loki
-#      options:
-#        loki-url: http://loki:3100/loki/api/v1/push
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
     networks:
       - mesh_network
 
@@ -33,6 +32,10 @@ services:
     ports:
       - "8089:8089"
       - "9089:9089"
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
     networks:
       - mesh_network
 
@@ -44,6 +47,10 @@ services:
     ports:
       - "9411:9411"
       - "16686:16686"
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
     networks:
       - mesh_network
 
@@ -56,6 +63,10 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
     networks:
       - mesh_network
 
@@ -66,6 +77,10 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
     networks:
       - mesh_network
 
@@ -83,6 +98,10 @@ services:
       - influxdb
     volumes:
       - ./data/grafana-storage:/var/lib/grafana
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
     networks:
       - mesh_network
 
@@ -96,31 +115,10 @@ services:
       - INFLUXDB_DB=k6
     volumes:
       - ./data/influxdb-storage:/var/lib/influxdb
-    networks:
-      - mesh_network
-
-  loki:
-    image: grafana/loki
-    container_name: loki
-    ports:
-      - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yaml
-    networks:
-      - mesh_network
-
-  sandbox:
-    image: almalinux:latest
-    container_name: sandbox
-    command: tail -f /dev/null
-    networks:
-      - mesh_network
-
-  promtail:
-    image: grafana/promtail:2.2.1
-    container_name: promtail
-    volumes:
-      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
-    command: -config.file=/etc/promtail/promtail-config.yaml
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
     networks:
       - mesh_network
 
@@ -133,6 +131,10 @@ services:
       - "6379:6379"
     volumes:
       - ./data/redis:/data
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
     restart: always
     networks:
       - mesh_network
@@ -147,5 +149,40 @@ services:
     volumes:
       - ./loadtest:/scripts
     entrypoint: "tail -f /dev/null"
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
+    networks:
+      - mesh_network
+
+  loki:
+    platform: linux/x86_64
+    image: grafana/loki
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - mesh_network
+    # docker run --platform linux/x86_64 -d --name=loki -p 3100:3100 grafana/loki
+
+  promtail:
+    image: grafana/promtail:2.2.1
+    container_name: promtail
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    networks:
+      - mesh_network
+
+  sandbox:
+    image: almalinux:latest
+    container_name: sandbox
+    command: tail -f /dev/null
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
     networks:
       - mesh_network
