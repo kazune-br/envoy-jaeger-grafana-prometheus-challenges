@@ -21,6 +21,12 @@ check-influxdb:
 check-loki:
 	curl localhost:3100/ready
 
+check-loki-chunks:
+	docker exec -it loki ls -l /loki/chunks
+
+check-node-exporter:
+	curl http://localhost:9100/metrics
+
 open-jaeger:
 	open http://localhost:16686/
 
