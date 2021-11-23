@@ -31,8 +31,7 @@ scrape_configs:
           group: 'envoy'
 
 remote_write:
-  - url: http://victoriametrics:8428/api/v1/write
-#remote_write:
-#  - url: 'http://influxdb:8086/api/v1/prom/write?db=prometheus'
+  - url: 'http://victoriametrics:8428/api/v1/write'
+  - url: 'http://influxdb:8086/api/v1/prom/write?db=prometheus'
 #remote_read:
 #  - url: 'https://influxdb:8086/api/v1/prom/read?db=prometheus'
