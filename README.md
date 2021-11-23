@@ -1,5 +1,9 @@
 # Envoy Jaeger Grafana Prometheus Challenges
 
+## Architecture
+![arc](./assets/architecture.png)
+
+
 ## How to run
 ```bash
 make up
