@@ -55,7 +55,7 @@ promsnapshot-create:
 vmbackup:
 	docker compose run vmbackup \
 		-storageDataPath=/data/victoria-metrics-data \
-		-snapshotName=20211123020527-16BA09A35AA04DFC \
+		-snapshotName=$$(ls -1 ./data/victoria-metrics-data/snapshots/ | fzf) \
 		-dst=fs:///data/vmbackup
 
 vmsnapshot-list:
