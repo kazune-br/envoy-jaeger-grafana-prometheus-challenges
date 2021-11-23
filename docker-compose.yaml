@@ -114,6 +114,7 @@ services:
     environment:
       - INFLUXDB_DB=k6
     volumes:
+      - ./influx_init.iql:/docker-entrypoint-initdb.d/influx_init.iql
       - ./data/influxdb-storage:/var/lib/influxdb
     logging:
       driver: loki

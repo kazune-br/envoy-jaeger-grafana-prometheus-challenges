@@ -44,4 +44,10 @@ k6:
 		k6 run \
 			--vus 5 \
 			--duration 60s \
-			--rps 5 - < ./loadtest/example.js
+			--rps 5 - < ./loadtest/example.js			--rps 5 - < ./loadtest/example.js
+
+influxdb:
+	docker exec -it influxdb influx
+
+promsnapshot-create:
+	curl -X POST http://localhost:9090/api/v1/admin/tsdb/snapshot

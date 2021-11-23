@@ -28,4 +28,7 @@ scrape_configs:
     static_configs:
       - targets: ['back-envoy:9089']
         labels:
-          group: 'envoy'
+          group: 'envoy'#remote_write:
+#  - url: 'http://influxdb:8086/api/v1/prom/write?db=prometheus'
+#remote_read:
+#  - url: 'https://influxdb:8086/api/v1/prom/read?db=prometheus'
