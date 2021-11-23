@@ -73,8 +73,13 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
+    command:
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-admin-api'
+      - '--config.file=/etc/prometheus/prometheus.yml'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus-storage:/prometheus
     ports:
       - "9090:9090"
     logging:
@@ -167,6 +172,25 @@ services:
     networks:
       - mesh_network
     # docker run --platform linux/x86_64 -d --name=loki -p 3100:3100 grafana/loki
+
+  victoriametrics:
+    container_name: victoriametrics
+    image: victoriametrics/victoria-metrics
+    volumes:
+      - ./data/victoria-metrics-data:/victoria-metrics-data
+    ports:
+      - "8428:8428"
+    networks:
+      - mesh_network
+
+  vmbackup:
+    container_name: vmbackup
+    image: victoriametrics/vmbackup
+    volumes:
+      - ./data/vmbackup:/data/vmbackup
+      - ./data/victoria-metrics-data:/data/victoria-metrics-data
+    networks:
+      - mesh_network
 
   promtail:
     image: grafana/promtail:2.2.1

@@ -3,7 +3,7 @@
 build:
 	COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker compose build
 
-up: build
+up:
 	docker compose up -d
 
 down:
@@ -44,10 +44,22 @@ k6:
 		k6 run \
 			--vus 5 \
 			--duration 60s \
-			--rps 5 - < ./loadtest/example.js			--rps 5 - < ./loadtest/example.js
+			--rps 5 - < ./loadtest/example.js
 
 influxdb:
 	docker exec -it influxdb influx
 
 promsnapshot-create:
 	curl -X POST http://localhost:9090/api/v1/admin/tsdb/snapshot
+
+vmbackup:
+	docker compose run vmbackup \
+		-storageDataPath=/data/victoria-metrics-data \
+		-snapshotName=20211123020527-16BA09A35AA04DFC \
+		-dst=fs:///data/vmbackup
+
+vmsnapshot-list:
+	curl http://localhost:8428/snapshot/list
+
+vmsnapshot-create:
+	curl -X POST http://localhost:8428/snapshot/create
