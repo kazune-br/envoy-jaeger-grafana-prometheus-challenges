@@ -128,40 +128,6 @@ services:
     networks:
       - mesh_network
 
-  redis:
-    build:
-      context: .
-      dockerfile: ./docker/redis/Dockerfile
-    container_name: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./data/redis:/data
-    logging:
-      driver: loki
-      options:
-        loki-url: http://localhost:3100/loki/api/v1/push
-    restart: always
-    networks:
-      - mesh_network
-
-  k6:
-    image: loadimpact/k6:latest
-    container_name: k6
-    ports:
-      - "6565:6565"
-    environment:
-      - K6_OUT=influxdb=http://influxdb:8086/k6
-    volumes:
-      - ./loadtest:/scripts
-    entrypoint: "tail -f /dev/null"
-    logging:
-      driver: loki
-      options:
-        loki-url: http://localhost:3100/loki/api/v1/push
-    networks:
-      - mesh_network
-
   loki:
     platform: linux/x86_64
     image: grafana/loki
@@ -172,6 +138,15 @@ services:
     networks:
       - mesh_network
     # docker run --platform linux/x86_64 -d --name=loki -p 3100:3100 grafana/loki
+
+  promtail:
+    image: grafana/promtail:2.2.1
+    container_name: promtail
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    networks:
+      - mesh_network
 
   victoriametrics:
     container_name: victoriametrics
@@ -192,12 +167,37 @@ services:
     networks:
       - mesh_network
 
-  promtail:
-    image: grafana/promtail:2.2.1
-    container_name: promtail
+  k6:
+    image: loadimpact/k6:latest
+    container_name: k6
+    ports:
+      - "6565:6565"
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
     volumes:
-      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
-    command: -config.file=/etc/promtail/promtail-config.yaml
+      - ./loadtest:/scripts
+    entrypoint: "tail -f /dev/null"
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
+    networks:
+      - mesh_network
+
+  redis:
+    build:
+      context: .
+      dockerfile: ./docker/redis/Dockerfile
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
+    restart: always
     networks:
       - mesh_network
 
